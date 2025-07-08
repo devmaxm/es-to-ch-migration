@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker"; // Import faker for generating fake data
 import { ElasticSearchService } from "../elsatic/elasticksearch.service"; // Import Elasticsearch service for interaction with ES
+import logger from '../logger/winston';
 
 // Create an instance of ElasticSearchService to connect to ES
 const esService = new ElasticSearchService();
@@ -15,8 +16,9 @@ const PLATFORMS = ["tiktok", "instagram", "facebook", "youtube"];
  */
 async function seedUsers(count = 180000) {
     // Check for valid count value
+    logger.info(`Seeding ${count} users to Elasticsearch...`);
     if (count <= 0) {
-        console.log("The number of users must be greater than 0.");
+        logger.info("The number of users must be greater than 0.");
         return;
     }
 
@@ -39,9 +41,9 @@ async function seedUsers(count = 180000) {
     // Execute the bulk request in Elasticsearch
     try {
         await esClient.bulk({ refresh: true, operations });
-        console.log(`${count} users inserted into Elasticsearch`);
+        logger.info(`${count} users inserted into Elasticsearch`);
     } catch (error) {
-        console.error("Error inserting users into Elasticsearch:", error);
+        logger.error("Error inserting users into Elasticsearch:", error);
     }
 }
 

@@ -1,6 +1,7 @@
 import { ElasticSearchService } from "../elsatic/elasticksearch.service";
 import { ClickHouseService } from "../clickhouse/clickhouse.service";
 import { convertISOToDateTimeFormat } from "../utils/date";
+import logger from '../logger/winston';
 
 // Initialize services
 const esService = new ElasticSearchService();
@@ -55,7 +56,7 @@ async function migrate() {
       });
 
       totalMigrated += users.length;
-      console.log(`Migrated batch: ${users.length} (total: ${totalMigrated})`);
+      logger.info(`Migrated batch: ${users.length} (total: ${totalMigrated}) \n`);
 
       // Get next batch
       const scrollId = response._scroll_id;
@@ -69,9 +70,9 @@ async function migrate() {
       });
     }
 
-    console.log(`Migration complete: ${totalMigrated} users migrated`);
+    logger.info(`Migration complete: ${totalMigrated} users migrated`);
   } catch (error) {
-    console.error(`Error migration users: `, error);
+    logger.error(`Error migration users: `, error);
   }
 }
 
